@@ -65,32 +65,11 @@ public:
 
    void swap(vector& rhs)
    {
-      /*
-      T tempArray[numCapacity];
-      for (int i = 0; i < numCapacity; i++)
-      {
-         tempArray[i] = data[i];
-      }
+     
+      std::swap(data, rhs.data);
+      std::swap(numCapacity, rhs.numCapacity);
+      std::swap(numElements, rhs.numElements);
 
-      int tempCapacity = numCapacity;
-      int tempElements = numElements;
-
-      for (int i = 0; i < rhs.numCapacity; i++)
-      {
-         data[i] = rhs.data[i];
-      }
-      
-      numCapacity = rhs.numCapacity;
-      numElements = rhs.numElements;
-
-      for (int i = 0; i < tempCapacity; i++)
-      {
-         rhs.data[i] = tempArray[i];
-      }
-
-      rhs.numCapacity = tempCapacity;
-      rhs.numElements = tempElements;
-      */
    }
    
    vector & operator = (const vector & rhs);
@@ -101,8 +80,8 @@ public:
    //
 
    class iterator;
-   iterator       begin() { return iterator(); }
-   iterator       end() { return iterator(); }
+   iterator       begin() { return iterator(this->data); }
+   iterator       end() { return iterator(this->data+this->numElements); }
 
    //
    // Access
@@ -176,48 +155,56 @@ class vector <T> ::iterator
    friend class ::TestHash;
 public:
    // constructors, destructors, and assignment operator
-   iterator()                           { this->p = new T; }
-   iterator(T* p)                       { this->p = new T; }
-   iterator(const iterator& rhs)        { this->p = new T; }
-   iterator(size_t index, vector<T>& v) { this->p = new T; }
+   iterator()                           { this->p = nullptr; }
+   iterator(T* p)                       { this->p = p; }
+   iterator(const iterator& rhs)        { this->p = rhs.p; }
+   iterator(size_t index, vector<T>& v) { this->p =  v.data+index; }
+
    iterator& operator = (const iterator& rhs)
    {
-      this->p = new T;
+      this->p = rhs.p;
       return *this;
    }
 
    // equals, not equals operator
-   bool operator != (const iterator& rhs) const { return true; }
-   bool operator == (const iterator& rhs) const { return true; }
+   bool operator != (const iterator& rhs) const { return this->p != rhs.p; }
+   bool operator == (const iterator& rhs) const { return this->p == rhs.p; }
 
    // dereference operator
    T& operator * ()
    {
-      return *(new T);
+      return *(p);
    }
 
    // prefix increment
    iterator& operator ++ ()
    {
+      p++;
       return *this;
    }
 
    // postfix increment
    iterator operator ++ (int postfix)
    {
-      return *this;
+      iterator temp = *this;
+      ++p;
+      return temp;
    }
+
 
    // prefix decrement
    iterator& operator -- ()
    {
+      p--;
       return *this;
    }
 
    // postfix decrement
    iterator operator -- (int postfix)
    {
-      return *this;
+      iterator temp = *this;
+      --p;
+      return temp;
    }
 
 private:
@@ -352,7 +339,7 @@ vector <T> :: ~vector()
 template <typename T>
 void vector <T> :: resize(size_t newElements)
 {
-   
+   if 
 }
 
 template <typename T>
@@ -372,7 +359,7 @@ void vector <T> :: resize(size_t newElements, const T & t)
 template <typename T>
 void vector <T> :: reserve(size_t newCapacity)
 {
-   numCapacity = numCapacity * 2;
+   numCapacity = newCapacity;
 }
 
 /***************************************
@@ -396,7 +383,7 @@ void vector <T> :: shrink_to_fit()
 template <typename T>
 T & vector <T> :: operator [] (size_t index)
 {
-   return *(new T);
+   return *(data+index);
    
 }
 
@@ -407,7 +394,7 @@ T & vector <T> :: operator [] (size_t index)
 template <typename T>
 const T & vector <T> :: operator [] (size_t index) const
 {
-   return 0; //data[index];
+   return *(data + index);
 }
 
 /*****************************************
@@ -418,7 +405,7 @@ template <typename T>
 T & vector <T> :: front ()
 {
    
-   return *(new T);
+   return *data;
 }
 
 /******************************************
@@ -428,7 +415,7 @@ T & vector <T> :: front ()
 template <typename T>
 const T & vector <T> :: front () const
 {
-   return *(new T);
+   return *data;
 }
 
 /*****************************************
@@ -438,7 +425,7 @@ const T & vector <T> :: front () const
 template <typename T>
 T & vector <T> :: back()
 {
-   return *(new T);
+   return *(data+numElements-1);
 }
 
 /******************************************
@@ -448,7 +435,7 @@ T & vector <T> :: back()
 template <typename T>
 const T & vector <T> :: back() const
 {
-   return *(new T);
+   return *(data + numElements - 1);
 }
 
 /***************************************

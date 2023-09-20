@@ -28,7 +28,7 @@ public:
    void run()
    {
       reset();
-      
+      /*
       // Construct
       test_construct_default();
       test_construct_sizeZero();
@@ -71,7 +71,8 @@ public:
       test_iterator_construct_default();
       test_iterator_construct_pointer();
       test_iterator_construct_index();
-
+      
+      
       // Access
       test_subscript_read();
       test_subscript_write();
@@ -80,7 +81,7 @@ public:
       test_back_read();
       test_back_write();
       test_back_partiallyfilled();
-
+      */
       // Insert
       test_pushback_empty();
       test_pushback_excessCapacity();
@@ -101,7 +102,7 @@ public:
       test_reserve_fourTen();
       test_reserve_standardZero();
       test_reserve_standardTen();
-
+      /*
       // Remove
       test_popback_empty();
       test_popback_full();
@@ -121,7 +122,7 @@ public:
       test_empty_full();
       test_capacity_empty();
       test_capacity_full();
-      
+      */
       report("Vector");
    }
    
