@@ -110,9 +110,16 @@ public:
 
    void clear()
    {
+       numElements = 0;
    }
    void pop_back()
    {
+       if (numElements > 0)
+       {
+           data[numElements - 1] = 0;
+           numElements--;
+       }
+       
    }
    void shrink_to_fit();
 
@@ -339,13 +346,19 @@ vector <T> :: ~vector()
 template <typename T>
 void vector <T> :: resize(size_t newElements)
 {
-   if 
+    reserve(newElements);
+    numElements = newElements;
 }
 
 template <typename T>
 void vector <T> :: resize(size_t newElements, const T & t)
 {
-   
+    reserve(newElements);
+    for (size_t i = numElements; i < newElements; ++i)
+    {
+        data[i] = t;
+    }
+    numElements = newElements;
 }
 
 /***************************************
@@ -359,7 +372,23 @@ void vector <T> :: resize(size_t newElements, const T & t)
 template <typename T>
 void vector <T> :: reserve(size_t newCapacity)
 {
+    if (newCapacity <= numCapacity) { return; }
+
+   T* dataNew = new T[newCapacity];
+
+   for (size_t i = 0; i < numCapacity; i++)
+   {
+       dataNew[i] = data[i];
+   }
+
+   for (size_t i = numCapacity; i < newCapacity; i++)
+   {
+       dataNew[i] = 0;
+   }
+
+   data = dataNew;
    numCapacity = newCapacity;
+
 }
 
 /***************************************
@@ -371,6 +400,10 @@ void vector <T> :: reserve(size_t newCapacity)
 template <typename T>
 void vector <T> :: shrink_to_fit()
 {
+    if (numElements == 0)
+    {
+        data = nullptr;
+    }
    numCapacity = numElements;
 }
 
@@ -449,13 +482,50 @@ const T & vector <T> :: back() const
 template <typename T>
 void vector <T> :: push_back (const T & t)
 {
-   
+    if (data == nullptr)
+    {
+        data = new T[1];
+        data[0] = t;
+        numCapacity++;
+        numElements++;
+    }
+    else if (numElements == numCapacity)
+    {
+        reserve(numCapacity * 2);
+        data[numElements] = t; 
+        numElements++;
+    }
+    else
+    {
+
+        data[numElements] = t;
+        numElements++;
+    }
+
 }
 
 template <typename T>
 void vector <T> ::push_back(T && t)
 {
-   
+    if (data == nullptr)
+    {
+        data = new T[1];
+        data[0] = t;
+        numCapacity++;
+        numElements++;
+    }
+    else if (numElements == numCapacity)
+    {
+        reserve(numCapacity * 2);
+        data[numElements] = t;
+        numElements++;
+    }
+    else
+    {
+
+        data[numElements] = t;
+        numElements++;
+    }
    
 }
 
